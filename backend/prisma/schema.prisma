@@ -1,0 +1,53 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id         Int      @id @default(autoincrement())
+  name       String?
+  phone      String?  @unique
+  age        Int?
+  email      String   @unique
+  password   String
+  urls       Url[]
+  resetTokens PasswordResetToken[]  // 👈 Adicione esta linha
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Visit {
+  id        Int      @id @default(autoincrement())
+  urlId     Int
+  url       Url      @relation(fields: [urlId], references: [id], onDelete: Cascade)
+  country   String?
+  region    String?
+  city      String?
+  ip        String?
+  timestamp DateTime @default(now())
+}
+
+model Url {
+  id        Int      @id @default(autoincrement())
+  original  String
+  slug      String   @unique
+  shortUrl  String
+  visits    Int      @default(0)
+  createdAt DateTime @default(now())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  visitLogs Visit[]
+}
+
+model PasswordResetToken {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  used      Boolean  @default(false)
+}
