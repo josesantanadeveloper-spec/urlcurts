@@ -3,6 +3,8 @@ import { NextResponse, type MiddlewareConfig, type NextRequest } from "next/serv
 // 🔓 Rotas públicas — controlam o que acontece quando o usuário está autenticado
 const publicRoutes = [
   { path: "/", whenAutenticated: "next" }, // ✅ permite acessar mesmo logado
+  { path: '/forgot-password', whenAutenticated: 'next' },
+  { path: '/reset-password', whenAutenticated: 'next' },
   { path: "/login", whenAutenticated: "redirect" },
   { path: "/register", whenAutenticated: "redirect" },
   { path: "/sobre", whenAutenticated: "next" },
