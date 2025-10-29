@@ -75,6 +75,17 @@ const UserProfileManager: React.FC<UserProfileManagerProps> = ({ closeModal }) =
     }
   };
 
+  // Função de logout
+  const handleLogout = async () => {
+    try {
+      await api.post("/logout", {}, { withCredentials: true });
+    } catch (err) {
+      console.error("Erro ao sair:", err);
+    } finally {
+      window.location.href = "/login";
+    }
+  };
+
   if (loading) return <LoadingOverlay message="Carregando perfil..." />;
   if (error) return <p className="text-center mt-10 text-red-400">{error}</p>;
   if (!user) return null;
@@ -155,12 +166,21 @@ const UserProfileManager: React.FC<UserProfileManagerProps> = ({ closeModal }) =
             </button>
           </>
         ) : (
-          <button
-            onClick={() => setEditing(true)}
-            className="px-5 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition"
-          >
-            Editar Perfil
-          </button>
+          <>
+            <button
+              onClick={() => setEditing(true)}
+              className="px-5 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition"
+            >
+              Editar Perfil
+            </button>
+
+            <button
+              onClick={handleLogout}
+              className="px-5 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition"
+            >
+              Sair da Conta
+            </button>
+          </>
         )}
       </div>
 
